@@ -21,12 +21,16 @@ fun RegisterScreen(navController: NavHostController) {
 
     fun validateAndRegister() {
         nameError = if (name.isBlank()) "Name is required" else null
-        emailError = if (email.isBlank()) "Email is required" else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) "Invalid email format" else null
+        emailError = if (email.isBlank()) "Email is required"
+        else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) "Invalid email format"
+        else null
         passwordError = if (password.length < 6) "Password must be at least 6 characters" else null
 
         if (nameError == null && emailError == null && passwordError == null) {
-            // Registration success (simulate and go to login)
-            navController.navigate(Routes.LOGIN)
+            // Navigate to Home screen after successful registration
+            navController.navigate(Routes.HOME) {
+                popUpTo(Routes.REGISTER) { inclusive = true }
+            }
         }
     }
 

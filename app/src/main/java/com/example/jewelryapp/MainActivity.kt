@@ -23,6 +23,10 @@ class MainActivity : ComponentActivity() {
                     composable(Routes.SPLASH) { SplashScreen(navController) }
                     composable(Routes.LOGIN) { LoginScreen(navController) }
                     composable(Routes.REGISTER) { RegisterScreen(navController) }
+                    composable(Routes.HOME) { HomeScreen(navController) }
+                    composable(Routes.CHECKOUT) { CheckoutScreen(navController) }
+                    composable(Routes.PAYMENT) { PaymentScreen(navController) }
+                    composable(Routes.CONFIRMATION) { ConfirmationScreen() }
                 }
             }
         }

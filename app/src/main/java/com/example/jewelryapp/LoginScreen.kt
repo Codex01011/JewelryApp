@@ -17,12 +17,17 @@ fun LoginScreen(navController: NavHostController) {
     var passwordError by remember { mutableStateOf<String?>(null) }
 
     fun validateAndLogin() {
-        emailError = if (email.isBlank()) "Email is required" else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) "Invalid email format" else null
+        emailError = if (email.isBlank()) "Email is required"
+        else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) "Invalid email format"
+        else null
+
         passwordError = if (password.isBlank()) "Password is required" else null
 
         if (emailError == null && passwordError == null) {
-            // Login successful (for now just navigate)
-            navController.navigate(Routes.SPLASH)
+            // Navigate to Home screen after validation
+            navController.navigate(Routes.HOME) {
+                popUpTo(Routes.LOGIN) { inclusive = true }
+            }
         }
     }
 
