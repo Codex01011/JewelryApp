@@ -9,6 +9,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.jewelryapp.navigation.Routes
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {
@@ -20,6 +21,8 @@ fun RegisterScreen(navController: NavHostController) {
     var emailError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
 
+    val auth = FirebaseAuth.getInstance()
+
     fun validateAndRegister() {
         nameError = if (name.isBlank()) "Name is required" else null
         emailError = if (email.isBlank()) "Email is required"
@@ -28,10 +31,16 @@ fun RegisterScreen(navController: NavHostController) {
         passwordError = if (password.length < 6) "Password must be at least 6 characters" else null
 
         if (nameError == null && emailError == null && passwordError == null) {
-            // Navigate to Home screen after successful registration
-            navController.navigate(Routes.HOME) {
-                popUpTo(Routes.REGISTER) { inclusive = true }
-            }
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(Routes.REGISTER) { inclusive = true }
+                        }
+                    } else {
+                        emailError = task.exception?.message ?: "Registration failed"
+                    }
+                }
         }
     }
 
