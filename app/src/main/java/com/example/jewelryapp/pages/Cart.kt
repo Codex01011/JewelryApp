@@ -1,15 +1,14 @@
 package com.example.jewelryapp.pages
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.jewelryapp.model.Product
 
 @Composable
@@ -21,7 +20,7 @@ fun CartScreen(
     modifier: Modifier = Modifier
 ) {
     // Calculates the total
-    val total = cartItems.sumOf { it.price.toDoubleOrNull() ?: 0.0 }
+    val total = cartItems.sumOf { it.price }
 
     Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
         Text("Your Cart", style = MaterialTheme.typography.headlineMedium)
@@ -48,11 +47,11 @@ fun CartScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            Image(
-                                painter = painterResource(id = product.imageRes),
+                            // Use AsyncImage to load the image from the URL
+                            AsyncImage(
+                                model = product.imageRes, // Assuming it's a URL (String)
                                 contentDescription = product.name,
-                                modifier = Modifier
-                                    .size(64.dp)
+                                modifier = Modifier.size(64.dp)
                             )
 
                             Column(modifier = Modifier.weight(1f)) {

@@ -9,6 +9,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.jewelryapp.navigation.Routes
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -16,6 +17,8 @@ fun LoginScreen(navController: NavHostController) {
     var password by remember { mutableStateOf("") }
     var emailError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
+
+    val auth = FirebaseAuth.getInstance()
 
     fun validateAndLogin() {
         emailError = if (email.isBlank()) "Email is required"
@@ -25,10 +28,16 @@ fun LoginScreen(navController: NavHostController) {
         passwordError = if (password.isBlank()) "Password is required" else null
 
         if (emailError == null && passwordError == null) {
-            // navigates to home page after login
-            navController.navigate(Routes.HOME) {
-                popUpTo(Routes.LOGIN) { inclusive = true }
-            }
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(Routes.LOGIN) { inclusive = true }
+                        }
+                    } else {
+                        emailError = task.exception?.message ?: "Login failed"
+                    }
+                }
         }
     }
 
